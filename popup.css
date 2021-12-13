@@ -22,6 +22,7 @@ input {
   padding: 5px;
   margin-top: 10px;
   box-sizing: border-box;
+  text-align: left;
 }
 
 #failed {
@@ -34,6 +35,7 @@ input {
   padding: 5px;
   margin-top: 10px;
   box-sizing: border-box;
+  text-align: left;
 }
 
 #go-container {

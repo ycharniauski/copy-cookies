@@ -44,15 +44,6 @@ function copyToBuffer(text){
   document.body.removeChild(copyFrom);
 }
 
-function setSuccess(str) {
-  success.textContent = str;
-  success.hidden = false;
-}
-function setFailed(str) {
-  failed.textContent = str;
-  failed.hidden = false;
-}
-
 function clearMessages() {
   failed.textContent = '';
   failed.hidden = true;
@@ -60,37 +51,48 @@ function clearMessages() {
   success.hidden = true;
 }
 
-async function copyCookiesValues() {
-  clearMessages();
-
-  const [{ url }] = await chrome.tabs.query({active: true })
-  const cookie = await chrome.cookies.get({ url, name: '__bfx_token' });
-
-  
-  if (cookie) {
-    const toDomain = toDomainInput.value || '';
-    copyToBuffer(`${toDomain}${cookie.value}`)  
-    setSuccess('COPIED!')
-  } else {
-    setFailed(`Failed: __bfx_token cookie not found`);   
-  }
+function setSuccess(str) {
+  success.textContent = str;
+  success.hidden = false;
+  setTimeout(clearMessages, 1000)
+}
+function setFailed(str) {
+  failed.textContent = str;
+  failed.hidden = false;
   setTimeout(clearMessages, 1000)
 }
 
-(async function initPopupWindow() {
-  const savedValues = await getStorageSyncData(['to_domain'])
-  toDomainInput.value = savedValues.to_domain || '';
-  copyCookiesValues()
-})();
+async function copyCookiesValues() {
+  clearMessages();
 
-form.addEventListener("submit", handleFormSubmit);
+  try {
+    const [{ url }] = await chrome.tabs.query({ active: true, currentWindow: true })
+    const cookie = await chrome.cookies.get({ url, name: '__bfx_token' });
+    if (!cookie) throw new Error('__bfx_token cookie not found')
+    const toDomain = toDomainInput.value || '';
+    copyToBuffer(`${toDomain}${cookie.value}`)  
+    setSuccess('COPIED!')
+  } catch (error) {
+    setFailed(`Failed: ${error.message}`);   
+  }
+}
 
-async function handleFormSubmit(event) {
+function handleFormSubmit(event) {
   event.preventDefault();
 
   setStorageSyncData({
     to_domain: toDomainInput.value || '',
-  })
-
-  copyCookiesValues();
+  }).then(() => copyCookiesValues())
 }
+
+form.addEventListener("submit", handleFormSubmit);
+
+function initPopupWindow() {
+  getStorageSyncData(['to_domain']).then(({ to_domain }) => {
+    toDomainInput.value = to_domain || '';
+    copyCookiesValues()
+  })
+}
+
+initPopupWindow();
+
