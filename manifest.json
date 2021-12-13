@@ -1,10 +1,19 @@
 {
-  "name": "Copy Cookies",
+  "name": "Copy Token To Buffer",
   "manifest_version": 3,
   "version": "1.0",
-  "permissions": ["cookies", "storage"],
+  "permissions": [
+		"cookies",
+		"tabs",
+		"storage"
+	],
+  "offline_enabled": true,
   "host_permissions": ["https://*/*", "http://*/*"],
   "action": {
     "default_popup": "popup.html"
-  }
+  },
+  "icons": {
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png"
+	}
 }
