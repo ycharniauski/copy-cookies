@@ -5,18 +5,6 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
 <body>
-  <form id="control-row">
-    <label for="input">Add prefix: </label>
-    <input type="text" id="to_domain">
-    <br>
-    <div id="go-container">
-      <button id="go">Copy Token</button>
-    </div>
-  </form>
-
-  <button class="copy">eugene.charniauski@bitfinex.com</button>
-  <button class="copy">eugene.charniauski+3@bitfinex.com</button>
-
   <div class="langs-switcher">
     <button id="en">en</button>
     <button id="ru">ru</button>
@@ -26,6 +14,24 @@
     <button id="zh-CN">zh-CN</button>
     <button id="zh-TW">zh-TW</button>
   </div>
+
+  <form id="control-row" style="display:none">
+    <label for="input">Add prefix: </label>
+    <input type="text" id="to_domain">
+    <br>
+    <div id="go-container">
+      <button id="go">Copy Token</button>
+    </div>
+  
+  </form>
+
+  <a class="link" href="https://mail.google.com/mail/u/0/#inbox">
+    gmail
+  </a>
+
+  <button class="copy">eugene.charniauski@bitfinex.com</button>
+  <button class="copy">eugene.charniauski+3@bitfinex.com</button>
+
   <div id="success"></div>
   <div id="failed"></div>
 </body>

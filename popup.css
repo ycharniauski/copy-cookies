@@ -57,6 +57,15 @@ button  {
   margin: 2px;
 }
 
+a {
+  display: inline-block;
+  background-color: white;
+  border: solid 1px lightblue;
+  cursor: pointer;
+  padding: 4px;
+  margin: 2px; 
+}
+
 .click-effect {
   box-shadow: 0 0 0 1px rgba(255,125,0,1),
             0 0 3px 3px rgba(255,175,0,0.8);

@@ -118,6 +118,19 @@ function setLangs() {
   })
 }
 
+function setLinks() {
+  const list = document.getElementsByClassName('link')
+  for (let item of list) {
+    item.addEventListener('click', (e) => {
+      chrome.tabs.query({ active: true, currentWindow: true }).then(([{ id, url }]) => {
+        const href = item.getAttribute('href')
+        chrome.tabs.update(id, { url: href })
+        clickEffect(btn)
+      })
+    })
+  }
+}
+
 function setCopyContent() {
   const list = document.getElementsByClassName('copy')
   for (let item of list) {
@@ -127,7 +140,6 @@ function setCopyContent() {
       setSuccess(`COPIED: ${value}`)
       clickEffect(item)
     })
-    
   }
 }
 
@@ -137,6 +149,7 @@ function initPopupWindow() {
 
   setLangs()
   setCopyContent()
+  setLinks()
 }
 
 initPopupWindow();
