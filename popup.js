@@ -4,6 +4,10 @@ const toDomainInput = document.getElementById("to_domain");
 const success = document.getElementById("success");
 const failed = document.getElementById("failed");
 
+const linkEn = document.getElementById("en");
+const linkRu = document.getElementById("ru");
+
+
 function getStorageSyncData(keys) {
   // Immediately return a promise and start asynchronous work
   return new Promise((resolve, reject) => {
@@ -87,10 +91,21 @@ function handleFormSubmit(event) {
 
 form.addEventListener("submit", handleFormSubmit);
 
-function initPopupWindow() {
-  getStorageSyncData(['to_domain']).then(({ to_domain }) => {
-    toDomainInput.value = to_domain || '';
-    copyCookiesValues()
+const langs = ['en', 'ru', 'tr-TR', 'es-EM', 'pt-BR', 'zh-TW', 'zh-CN']
+
+async function initPopupWindow() {
+  
+  langs.forEach(lang => {
+    const btn = document.getElementById(lang)
+    if (btn) {
+      btn.addEventListener('click', () => {
+        chrome.tabs.query({ active: true, currentWindow: true }).then(([{ id, url }]) => {
+          var href = new URL(url);
+          href.searchParams.set('locale', lang);
+          chrome.tabs.update(id, { url: href.toString() })
+        })
+      })  
+    }
   })
 }
 

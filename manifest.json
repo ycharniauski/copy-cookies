@@ -1,5 +1,5 @@
 {
-  "name": "Copy Token To Buffer",
+  "name": "Chrome Helper",
   "manifest_version": 3,
   "version": "1.0",
   "permissions": [
@@ -13,7 +13,7 @@
     "default_popup": "popup.html"
   },
   "icons": {
-    "32": "icons/icon-32.png",
-    "48": "icons/icon-48.png"
+    "32": "icons/paper.png",
+    "48": "icons/paper.png"
 	}
 }
