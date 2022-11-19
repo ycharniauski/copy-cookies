@@ -8,7 +8,7 @@ label {
 }
 
 input {
-  width: 500px;
+  width: 200px;
   padding: 5px;
 }
 
@@ -48,7 +48,17 @@ input {
   font-size: 15px;
 }
 
-.lang-switcher .button {
-  min-width: 200px;
+button  {
+  background-color: white;
+  border: solid 1px lightblue;
+  cursor: pointer;
+  min-width: 40px;
+  min-height: 30px;
+  margin: 2px;
+}
+
+.click-effect {
+  box-shadow: 0 0 0 1px rgba(255,125,0,1),
+            0 0 3px 3px rgba(255,175,0,0.8);
 }
 

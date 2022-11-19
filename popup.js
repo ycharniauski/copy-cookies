@@ -55,11 +55,20 @@ function clearMessages() {
   success.hidden = true;
 }
 
+
+function clickEffect(el) {
+  el.classList.add('click-effect');
+  setTimeout(() => {
+    el.classList.remove('click-effect');
+  }, 200)
+}
+
 function setSuccess(str) {
   success.textContent = str;
   success.hidden = false;
   setTimeout(clearMessages, 1000)
 }
+
 function setFailed(str) {
   failed.textContent = str;
   failed.hidden = false;
@@ -91,10 +100,9 @@ function handleFormSubmit(event) {
 
 form.addEventListener("submit", handleFormSubmit);
 
-const langs = ['en', 'ru', 'tr-TR', 'es-EM', 'pt-BR', 'zh-TW', 'zh-CN']
 
-async function initPopupWindow() {
-  
+function setLangs() {
+  const langs = ['en', 'ru', 'tr-TR', 'es-EM', 'pt-BR', 'zh-TW', 'zh-CN']
   langs.forEach(lang => {
     const btn = document.getElementById(lang)
     if (btn) {
@@ -103,10 +111,32 @@ async function initPopupWindow() {
           var href = new URL(url);
           href.searchParams.set('locale', lang);
           chrome.tabs.update(id, { url: href.toString() })
+          clickEffect(btn)
         })
       })  
     }
   })
+}
+
+function setCopyContent() {
+  const list = document.getElementsByClassName('copy')
+  for (let item of list) {
+    item.addEventListener('click', (e) => {
+      const value = item.innerText
+      copyToBuffer(value)
+      setSuccess(`COPIED: ${value}`)
+      clickEffect(item)
+    })
+    
+  }
+}
+
+function initPopupWindow() {  
+  success.hidden = true;
+  failed.hidden = true;
+
+  setLangs()
+  setCopyContent()
 }
 
 initPopupWindow();
