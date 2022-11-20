@@ -49,21 +49,29 @@ input {
 }
 
 button  {
-  background-color: white;
-  border: solid 1px lightblue;
+  background-color: rgb(242, 252, 255);
+  border: none;
   cursor: pointer;
   min-width: 40px;
   min-height: 30px;
   margin: 2px;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: rgb(211, 236, 243);
 }
 
 a {
   display: inline-block;
-  background-color: white;
-  border: solid 1px lightblue;
+  background-color: rgb(242, 252, 255);
   cursor: pointer;
   padding: 4px;
   margin: 2px; 
+}
+
+a:hover {
+  background-color: rgb(211, 236, 243);
 }
 
 .click-effect {
