@@ -1,12 +1,5 @@
-const form = document.getElementById("control-row");
-const go = document.getElementById("go");
-const toDomainInput = document.getElementById("to_domain");
 const success = document.getElementById("success");
 const failed = document.getElementById("failed");
-
-const linkEn = document.getElementById("en");
-const linkRu = document.getElementById("ru");
-
 
 function getStorageSyncData(keys) {
   // Immediately return a promise and start asynchronous work
@@ -100,59 +93,6 @@ async function copyCookiesValues() {
   }
 }
 
-function handleFormSubmit(event) {
-  event.preventDefault();
-
-  setStorageSyncData({
-    to_domain: toDomainInput.value || '',
-  }).then(() => copyCookiesValues())
-}
-
-form.addEventListener("submit", handleFormSubmit);
-
-
-function addLanguages() {
-  const langs = ['en', 'ru', 'tr-TR', 'es-EM', 'pt-BR', 'zh-TW', 'zh-CN']
-  langs.forEach(lang => {
-    const btn = document.getElementById(lang)
-    if (btn) {
-      btn.addEventListener('click', () => {
-        chrome.tabs.query({ active: true, currentWindow: true }).then(([{ id, url }]) => {
-          var href = new URL(url);
-          href.searchParams.set('locale', lang);
-          chrome.tabs.update(id, { url: href.toString() })
-          clickEffect(btn)
-        })
-      })  
-    }
-  })
-}
-
-function setLinks() {
-  const list = document.getElementsByClassName('link')
-  for (let item of list) {
-    item.addEventListener('click', (e) => {
-      chrome.tabs.query({ active: true, currentWindow: true }).then(([{ id, url }]) => {
-        const href = item.getAttribute('href')
-        chrome.tabs.update(id, { url: href })
-        clickEffect(btn)
-      })
-    })
-  }
-}
-
-function setCopyContent() {
-  const list = document.getElementsByClassName('copy')
-  for (let item of list) {
-    item.addEventListener('click', (e) => {
-      const value = item.innerText
-      copyToBuffer(value)
-      setSuccess(`COPIED: ${value}`)
-      clickEffect(item)
-    })
-  }
-}
-
 function apiPost({ token, url, data }) {
   return new Promise((resolve, reject) => {
     const req = new XMLHttpRequest();
@@ -209,11 +149,65 @@ function addSettings () {
   const keys = Object.keys(settings)
   keys.forEach((key) => {
     const btn = document.getElementById(key)
-    const value = settings[key]
-    btn.addEventListener('click', () => {
-      setSetting(value)
-      clickEffect(btn)
+    if (btn) {
+      const value = settings[key]
+      btn.addEventListener('click', () => {
+        setSetting(value)
+        clickEffect(btn)
+      })
+    }
+  })
+}
+
+function addLinks() {
+  const list = document.getElementsByClassName('link')
+  for (let item of list) {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      clickEffect(item)
+      chrome.tabs.query({ active: true, currentWindow: true }).then(([{ id }]) => {
+        const href = item.getAttribute('href')
+        if (e.ctrlKey) {
+          chrome.tabs.create({ url: href })
+        } else {
+          chrome.tabs.update(id, { url: href })
+        }
+      })
     })
+  }
+}
+
+function addCopyContent() {
+  const list = document.getElementsByClassName('copy')
+  for (let item of list) {
+    item.addEventListener('click', (e) => {
+      const value = item.innerText
+      copyToBuffer(value)
+      setSuccess(`COPIED: ${value}`)
+      clickEffect(item)
+    })
+  }
+}
+
+function bindCloudflare() {
+  const btn = document.getElementById('cloudflare')
+  btn.addEventListener('click', async () => {
+    clickEffect(btn)
+
+    const { id, url } = await getCurrentTab()
+
+    if (!url.startsWith('https://ifinex.cloudflareaccess.com/')) return
+
+    chrome.scripting.executeScript(
+      {
+        target: {tabId: id },
+        func: () => {
+          document.getElementsByName('email')[0].value='eugene.charniauski@bitfinex.com'
+          document.getElementsByClassName('AuthFormLogin')[0].submit()
+        },
+      }
+    );
+    setTimeout(async () => { const tab = await getCurrentTab(); chrome.tabs.update(tab.id, { url: 'https://mail.google.com/mail/u/0/#inbox' }) }, 1500)
   })
 }
 
@@ -221,12 +215,37 @@ async function initPopupWindow() {
   success.hidden = true;
   failed.hidden = true;
 
-  setCopyContent()
-  setLinks()
+  addCopyContent()
+  addLinks()
   
-  addLanguages()
   addSettings()
+  //bindCloudflare()
 }
 
 initPopupWindow();
+
+
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    // listen for messages sent from background.js
+    //if (request.message === 'hello') {
+      console.log('HELLO')
+      alert('HELLO')
+      // console.log(request.url) // new url is now in content scripts!
+    //}
+});
+
+
+
+// document.addEventListener('DOMContentLoaded', async function() {
+	
+
+
+
+			
+//  chrome.tabs.executeScript(null,{code:"document.getElementById('ap_customer_name').value = ''"});
+  //chrome.tabs.executeScript(tab.id, {code:"document.getElementsByName('email')[0].value='xxx1'"});
+		
+// });
 

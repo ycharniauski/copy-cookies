@@ -5,12 +5,16 @@
   "permissions": [
 		"cookies",
 		"tabs",
-		"storage"
+		"storage",
+    "scripting"
 	],
   "offline_enabled": true,
   "host_permissions": ["https://*/*", "http://*/*"],
   "action": {
     "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "icons": {
     "32": "icons/paper.png",
